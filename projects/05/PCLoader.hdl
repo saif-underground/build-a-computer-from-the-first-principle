@@ -1,0 +1,61 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/05/CPU.hdl
+
+/**
+ * The Hack CPU (Central Processing unit), consisting of an ALU,
+ * two registers named A and D, and a program counter named PC.
+ * The CPU is designed to fetch and execute instructions written in 
+ * the Hack machine language. In particular, functions as follows:
+ * Executes the inputted instruction according to the Hack machine 
+ * language specification. The D and A in the language specification
+ * refer to CPU-resident registers, while M refers to the external
+ * memory location addressed by A, i.e. to Memory[A]. The inM input 
+ * holds the value of this location. If the current instruction needs 
+ * to write a value to M, the value is placed in outM, the address 
+ * of the target location is placed in the addressM output, and the 
+ * writeM control bit is asserted. (When writeM==0, any value may 
+ * appear in outM). The outM and writeM outputs are combinational: 
+ * they are affected instantaneously by the execution of the current 
+ * instruction. The addressM and pc outputs are clocked: although they 
+ * are affected by the execution of the current instruction, they commit 
+ * to their new values only in the next time step. If reset==1 then the 
+ * CPU jumps to address 0 (i.e. pc is set to 0 in next time step) rather 
+ * than to the address resulting from executing the current instruction. 
+ */
+
+CHIP PCLoader {
+
+    IN  a,  // i[15]; i stands for instruction
+        b,  // i[2]
+        c,  // i[1]    
+        d,  // i[0]  
+        e,  // zr aluoutput
+        f;  // ng aluoutput
+
+    OUT pcLoad;
+
+    PARTS:
+    // Put your code here:
+    Not(in=e , out=eNot );
+    Not(in=f , out=fNot );
+    
+    And(a=d , b=eNot , out=w0 );
+    And(a=w0 , b=fNot , out=w1 ); //in of or
+    
+    And(a=c, b=e, out=w2 );
+    And(a=w2, b=fNot, out=w3);
+    
+    And(a=b , b=eNot , out=w4);
+    And(a=w4, b=f, out=w5);
+    
+    And(a=b , b=c , out=w6);
+    And(a=w6 , b=d , out=w7);
+    
+    Or(a=w1 , b=w3 , out=w8 );
+    Or(a=w8 , b=w5 , out=w9 );
+    Or(a=w9 , b=w7 , out=w10 );
+    
+    And(a=w10 , b=a , out=pcLoad );
+}
