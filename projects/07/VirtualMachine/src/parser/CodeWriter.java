@@ -249,4 +249,8 @@ public class CodeWriter {
         labelCount++;
         return "LABEL_" + labelCount;
     }
+
+    public void writeLabel(String label) {
+        
+    }
 }

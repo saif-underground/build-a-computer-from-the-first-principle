@@ -6,6 +6,7 @@
 package parser;
 
 import enums.COMMAND_TYPE;
+import enums.KEY_WORDS;
 import java.util.regex.Matcher;
 import wrappers.FileWrapper;
 
@@ -52,8 +53,7 @@ public class Parser {
             if (matcher.find()) {
                 arg1 = matcher.group(1);
             }
-        }
-        if (currentCmd.matches(cmdPatterns.getPushPopCmdPattern().toString())) {
+        } else if(currentCmd.matches(cmdPatterns.getPushPopCmdPattern().toString())) {
             if (currentCmd.startsWith("push")) {
                 currentCmdType = COMMAND_TYPE.C_PUSH;
             } else {
@@ -64,6 +64,19 @@ public class Parser {
                 arg1 = matcher.group(2);
                 arg2 = matcher.group(3);
             }
+        } else if(currentCmd.matches(cmdPatterns.getProgramFlowPattern().toString())){
+            if(currentCmd.startsWith(KEY_WORDS.LABEL.getKeyWord())){
+                currentCmdType = COMMAND_TYPE.C_LABEL;
+            }else if(currentCmd.startsWith(KEY_WORDS.IF_GOTO.getKeyWord())){
+                currentCmdType = COMMAND_TYPE.C_IF;
+            }else if(currentCmd.startsWith(KEY_WORDS.GOTO.getKeyWord())){
+                currentCmdType = COMMAND_TYPE.C_GOTO;
+            }
+            
+            Matcher matcher = cmdPatterns.getProgramFlowPattern().matcher(currentCmd);
+            if (matcher.find()) {
+                arg1 = matcher.group(1);
+            }            
         }
 
         if (currentCmdType == null) {

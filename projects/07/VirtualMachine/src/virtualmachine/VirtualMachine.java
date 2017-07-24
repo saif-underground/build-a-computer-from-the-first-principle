@@ -6,6 +6,7 @@
 package virtualmachine;
 
 import enums.COMMAND_TYPE;
+import java.io.File;
 import java.io.IOException;
 import parser.CodeWriter;
 import parser.Parser;
@@ -16,29 +17,45 @@ import parser.Parser;
  */
 public class VirtualMachine {
 
+    String inputFolderName = "prog";
+    String outputFileName = "prog.asm";
+
     Parser parser;
     CodeWriter codeWriter;
 
-    public VirtualMachine(String inputFile, String outputFile) throws IOException {
-        parser = new Parser(inputFile);
-        codeWriter = new CodeWriter(outputFile);
+    public VirtualMachine() throws IOException {
+
+        codeWriter = new CodeWriter(inputFolderName + "/" + outputFileName);
     }
 
     public void run() throws IOException {
-        while (parser.hasMoreCommands()) {
-            parser.advance();
-            COMMAND_TYPE cmdType = parser.commandType();
-            if (cmdType == COMMAND_TYPE.C_ARITHMATIC) {
-                codeWriter.writeArithmatic(parser.arg1());
-            } else {
-                codeWriter.writePushPop(cmdType, parser.arg1(), parser.arg2());
+        File folder = new File(inputFolderName);
+        File[] listOfFiles = folder.listFiles();
+
+        for (File inputFile : listOfFiles) {
+            if(!inputFile.getName().endsWith(".vm")){
+                continue;
+            }
+            String currentFileName = inputFile.getName().substring(0, inputFile.getName().indexOf('.'));
+            String currentFunctionName = "";
+            parser = new Parser(inputFile.getAbsolutePath());
+            while (parser.hasMoreCommands()) {
+                parser.advance();
+                COMMAND_TYPE cmdType = parser.commandType();
+                if (cmdType == COMMAND_TYPE.C_ARITHMATIC) {
+                    codeWriter.writeArithmatic(parser.arg1());
+                } else if (cmdType == COMMAND_TYPE.C_POP || cmdType == COMMAND_TYPE.C_PUSH) {
+                    codeWriter.writePushPop(cmdType, parser.arg1(), parser.arg2());
+                }else if(cmdType == COMMAND_TYPE.C_LABEL){
+                    String labelName = String.format("%s.%s$%s", currentFileName, currentFunctionName, parser.arg1());
+                    System.out.println(labelName);
+                    codeWriter.writeLabel(labelName);
+                }
             }
         }
     }
 
     public static void main(String args[]) throws IOException {
-        String inputFile = "SimpleAdd.vm";
-        String outputFile = "SimpleAdd.asm";
-        new VirtualMachine(inputFile, outputFile).run();
+        new VirtualMachine().run();
     }
 }

@@ -40,7 +40,7 @@ public class CommandPatterns {
             KEY_WORDS.NOT.getKeyWord();
     
     private String arithmaticLogicalCommandPatternStr = String.format("^(%s)$", arithmatiLogicalCommands);
-    private static String pushPopPattern = String.format("^(%s) (%s) (\\d+)$", pushPop, segment); 
+    private static String pushPopPatternStr = String.format("^(%s) (%s) (\\d+)$", pushPop, segment); 
     public static String programFlowPatternStr = String.format("^(%s) (%s)$", programFlowCommands, symbolPattern);
     public static String functionDeclPatternStr = String.format("^function (%s) (\\d+)$", symbolPattern); 
     public static String callPatternStr = String.format("^call (%s) (\\d+)$", symbolPattern);
@@ -51,6 +51,10 @@ public class CommandPatterns {
     }
     
     public Pattern getPushPopCmdPattern(){
-        return Pattern.compile(pushPopPattern);
+        return Pattern.compile(pushPopPatternStr);
+    }
+    
+    public Pattern getProgramFlowPattern(){
+        return Pattern.compile(programFlowPatternStr);
     }
 }
