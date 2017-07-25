@@ -48,8 +48,13 @@ public class VirtualMachine {
                     codeWriter.writePushPop(cmdType, parser.arg1(), parser.arg2());
                 }else if(cmdType == COMMAND_TYPE.C_LABEL){
                     String labelName = String.format("%s.%s$%s", currentFileName, currentFunctionName, parser.arg1());
-                    System.out.println(labelName);
                     codeWriter.writeLabel(labelName);
+                }else if(cmdType == COMMAND_TYPE.C_GOTO){
+                    String labelName = String.format("%s.%s$%s", currentFileName, currentFunctionName, parser.arg1());
+                    codeWriter.writeGoto(labelName);
+                }else if(cmdType == COMMAND_TYPE.C_IF){
+                    String labelName = String.format("%s.%s$%s", currentFileName, currentFunctionName, parser.arg1());
+                    codeWriter.writeIf(labelName);
                 }
             }
         }

@@ -17,6 +17,7 @@ import java.io.IOException;
  */
 public class CodeWriter {
 
+    private static String NL = "\n"; 
     private static int labelCount = 0;
     String fileName;
     String output = "";
@@ -162,8 +163,7 @@ public class CodeWriter {
             }
 
         } else //POP
-        {
-            if (segment.equalsIgnoreCase(KEY_WORDS.LOCAL.getKeyWord())
+         if (segment.equalsIgnoreCase(KEY_WORDS.LOCAL.getKeyWord())
                     || segment.equalsIgnoreCase(KEY_WORDS.ARGUMENT.getKeyWord())
                     || segment.equalsIgnoreCase(KEY_WORDS.THIS.getKeyWord())
                     || segment.equalsIgnoreCase(KEY_WORDS.THAT.getKeyWord())) {
@@ -198,18 +198,16 @@ public class CodeWriter {
                         + "D=M\n"
                         + "@" + ramAddr + "\n"
                         + "M=D\n";
-            } else if (segment.equalsIgnoreCase(KEY_WORDS.TEMP.getKeyWord()) 
+            } else if (segment.equalsIgnoreCase(KEY_WORDS.TEMP.getKeyWord())
                     || segment.equalsIgnoreCase(KEY_WORDS.STATIC.getKeyWord())) {
                 String ramAddr = getRamAddress(segment, index);
-                code =  "@SP\n"
+                code = "@SP\n"
                         + "M=M-1\n"
                         + "A=M\n"
                         + "D=M\n"
                         + "@" + ramAddr + "\n"
-                        + "M=D\n" 
-                        ;
+                        + "M=D\n";
             }
-        }
 
         fileWriter.write(code);
         fileWriter.flush();
@@ -232,7 +230,7 @@ public class CodeWriter {
             if (offset >= 0 && offset < 16) {
                 ramAddr = "R" + index;
             }
-        } else if(segment.equalsIgnoreCase(KEY_WORDS.STATIC.getKeyWord())){
+        } else if (segment.equalsIgnoreCase(KEY_WORDS.STATIC.getKeyWord())) {
             int offset = Integer.parseInt(index);
             if (offset >= 0 && offset <= (RAM_ADDRESS.STATIC.getEnd() - RAM_ADDRESS.STATIC.getBegin())) {
                 ramAddr = "" + (RAM_ADDRESS.STATIC.getBegin() + offset);
@@ -250,7 +248,31 @@ public class CodeWriter {
         return "LABEL_" + labelCount;
     }
 
-    public void writeLabel(String label) {
+    public void writeLabel(String label) throws IOException {
+        String code = "(" + label + ")\n";
+        writeCode(code);
+    }
+    
+    public void writeGoto(String label) throws IOException {
+        String code = "@" + label + NL
+                + "0;JMP" + NL;
+        writeCode(code);
         
+    }
+
+    public void writeIf(String labelName) throws IOException {
+        //pop stack and put value to D
+        String code = "@SP" + NL
+                + "M=M-1"+ NL
+                + "A=M" + NL
+                + "D=M" + NL
+                + "@" + labelName + NL
+                + "D;JNE" + NL;
+        writeCode(code);
+    }
+    
+    private void writeCode(String code) throws IOException{
+        fileWriter.write(code);
+        fileWriter.flush();
     }
 }

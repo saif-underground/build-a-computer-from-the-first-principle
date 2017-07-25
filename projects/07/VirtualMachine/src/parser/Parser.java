@@ -75,7 +75,7 @@ public class Parser {
             
             Matcher matcher = cmdPatterns.getProgramFlowPattern().matcher(currentCmd);
             if (matcher.find()) {
-                arg1 = matcher.group(1);
+                arg1 = matcher.group(2);
             }            
         }
 
