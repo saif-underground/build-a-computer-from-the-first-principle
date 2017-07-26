@@ -51,7 +51,7 @@ public class FileWrapper {
                 }
                 //discard white spaces
                 line = line.replaceAll("\\s+", " ");
-                line = line.replaceAll("//.*", "");
+                line = line.replaceAll("\\s*//.*", "");
                 content.add(line);
             }
         } catch (IOException e) {

@@ -25,16 +25,17 @@ public class CodeWriter {
 
     public CodeWriter(String fileName) throws IOException {
         setFileName(fileName);
+        fileWriter = new FileWriter(fileName);
     }
 
     public void setFileName(String fileName) throws IOException {
         this.fileName = fileName;
-        writeBootStrapCode();
+        //writeBootStrapCode();
     }
 
     //EVENTUALLY REMOVE THIS METHOD AND CALL SYS.INIT INSTEAD
     private void writeBootStrapCode() throws IOException {
-        fileWriter = new FileWriter(fileName);
+        
         String code = null;
         code = "@" + RAM_ADDRESS.STACK.getBegin() + "\n";
         code = code
@@ -78,7 +79,7 @@ public class CodeWriter {
                     + "A=M-1\n"
                     + "D=M\n"
                     + "A=A-1\n"
-                    + "M=D" + operator + "M\n"
+                    + "M=M" + operator + "D\n"
                     + "D=A+1\n"
                     + "@SP\n"
                     + "M=D\n";
@@ -138,7 +139,8 @@ public class CodeWriter {
                         + "@SP" + "\n"
                         + "A=M\n"
                         + "M=D\n"
-                        + "@" + ramAddr + "\n"
+                       // + "@" + ramAddr + "\n"
+                         + "@SP"+ "\n"
                         + "M=M+1\n";
 
             } else if (segment.equalsIgnoreCase(KEY_WORDS.POINTER.getKeyWord())) {
@@ -235,7 +237,7 @@ public class CodeWriter {
             if (offset >= 0 && offset <= (RAM_ADDRESS.STATIC.getEnd() - RAM_ADDRESS.STATIC.getBegin())) {
                 ramAddr = "" + (RAM_ADDRESS.STATIC.getBegin() + offset);
             }
-        }
+        } 
 
         if (ramAddr == null) {
             throw new RuntimeException("RAM Address is null in getRamAddress method");
