@@ -237,7 +237,11 @@ public class CodeWriter {
             if (offset >= 0 && offset <= (RAM_ADDRESS.STATIC.getEnd() - RAM_ADDRESS.STATIC.getBegin())) {
                 ramAddr = "" + (RAM_ADDRESS.STATIC.getBegin() + offset);
             }
-        } 
+        } else if (segment.equalsIgnoreCase(KEY_WORDS.THAT.getKeyWord())) {
+            ramAddr = "THAT";
+        } else if (segment.equalsIgnoreCase(KEY_WORDS.THIS.getKeyWord())) {
+            ramAddr = "THIS";
+        }
 
         if (ramAddr == null) {
             throw new RuntimeException("RAM Address is null in getRamAddress method");

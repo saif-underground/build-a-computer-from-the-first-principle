@@ -3,7 +3,7 @@
 // by Nisan and Schocken, MIT Press.
 // File name: projects/08/ProgramFlow/FibonacciSeries/FibonacciSeries.tst
 
-load FibonacciSeries.asm,
+load prog.asm,
 output-file FibonacciSeries.out,
 compare-to FibonacciSeries.cmp,
 output-list RAM[3000]%D1.6.2 RAM[3001]%D1.6.2 RAM[3002]%D1.6.2 
