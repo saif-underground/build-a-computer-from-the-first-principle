@@ -16,7 +16,8 @@ import parser.Parser;
  * @author Saif
  */
 public class VirtualMachine {
-
+    String currentFileName;
+            
     String inputFolderName = "prog";
     String outputFileName = "prog.asm";
 
@@ -25,7 +26,7 @@ public class VirtualMachine {
 
     public VirtualMachine() throws IOException {
 
-        codeWriter = new CodeWriter(inputFolderName + "/" + outputFileName);
+        codeWriter = new CodeWriter(inputFolderName + "/" + outputFileName, this);
     }
 
     public void run() throws IOException {
@@ -36,7 +37,7 @@ public class VirtualMachine {
             if (!inputFile.getName().endsWith(".vm")) {
                 continue;
             }
-            String currentFileName = inputFile.getName().substring(0, inputFile.getName().indexOf('.'));
+            currentFileName = inputFile.getName().substring(0, inputFile.getName().indexOf('.'));
             String currentFunctionName = "";
             parser = new Parser(inputFile.getAbsolutePath());
             while (parser.hasMoreCommands()) {
@@ -64,6 +65,10 @@ public class VirtualMachine {
                 }
             }
         }
+    }
+    
+    public String getCurrentFileName(){
+        return currentFileName;
     }
 
     public static void main(String args[]) throws IOException {

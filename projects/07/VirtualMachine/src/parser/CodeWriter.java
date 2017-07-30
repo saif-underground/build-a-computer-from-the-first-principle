@@ -10,6 +10,7 @@ import enums.KEY_WORDS;
 import enums.RAM_ADDRESS;
 import java.io.FileWriter;
 import java.io.IOException;
+import virtualmachine.VirtualMachine;
 
 /**
  *
@@ -19,12 +20,14 @@ public class CodeWriter {
 
     private static String NL = "\n";
     private static int labelCount = 0;
+    VirtualMachine vm;
     String fileName;
     String output = "";
     FileWriter fileWriter = null;
 
-    public CodeWriter(String fileName) throws IOException {
+    public CodeWriter(String fileName, VirtualMachine vmTranslator) throws IOException {
         setFileName(fileName);
+        vm = vmTranslator;
         fileWriter = new FileWriter(fileName);
         writeBootStrapCode();
     }
@@ -170,8 +173,7 @@ public class CodeWriter {
                         + "M=D\n"
                         + "@SP\n"
                         + "M=M+1\n";
-            } else if (segment.equalsIgnoreCase(KEY_WORDS.TEMP.getKeyWord())
-                    || segment.equalsIgnoreCase(KEY_WORDS.STATIC.getKeyWord())) {
+            } else if (segment.equalsIgnoreCase(KEY_WORDS.TEMP.getKeyWord())) {
                 String ramAddr = getRamAddress(segment, index);
                 code = "@" + ramAddr + "\n"
                         + "D=M\n"
@@ -180,6 +182,15 @@ public class CodeWriter {
                         + "M=D\n"
                         + "@SP\n"
                         + "M=M+1\n";
+            } else if(segment.equalsIgnoreCase(KEY_WORDS.STATIC.getKeyWord())){
+                String varName = vm.getCurrentFileName()+"."+index;
+                code = "@"+varName+NL;
+                code += "D=M" + NL;
+                code += "@SP" + NL;
+                code += "A=M" + NL;
+                code += "M=D" + NL;
+                code += "@SP" + NL;
+                code += "M=M+1" + NL;
             }
 
         } else //POP
@@ -219,8 +230,7 @@ public class CodeWriter {
                         + "D=M\n"
                         + "@" + ramAddr + "\n"
                         + "M=D\n";
-            } else if (segment.equalsIgnoreCase(KEY_WORDS.TEMP.getKeyWord())
-                    || segment.equalsIgnoreCase(KEY_WORDS.STATIC.getKeyWord())) {
+            } else if (segment.equalsIgnoreCase(KEY_WORDS.TEMP.getKeyWord())) {
                 String ramAddr = getRamAddress(segment, index);
                 code = "@SP\n"
                         + "M=M-1\n"
@@ -228,6 +238,14 @@ public class CodeWriter {
                         + "D=M\n"
                         + "@" + ramAddr + "\n"
                         + "M=D\n";
+            } else if(segment.equalsIgnoreCase(KEY_WORDS.STATIC.getKeyWord())){
+                String varName = vm.getCurrentFileName()+"."+index;
+                code = "@SP" + NL;
+                code += "M=M-1" + NL;
+                code += "A=M" + NL;
+                code += "D=M" + NL;
+                code += "@" + varName + NL;
+                code += "M=D" + NL;
             }
         }
 
@@ -248,14 +266,18 @@ public class CodeWriter {
                 ramAddr = "THIS";
             }
         } else if (segment.equalsIgnoreCase(KEY_WORDS.TEMP.getKeyWord())) {
-            int offset = Integer.parseInt(index);
-            if (offset >= 0 && offset < 16) {
-                ramAddr = "R" + index;
+            int offset = Integer.parseInt(index) + 5;
+            if (offset >= 5 && offset <= 12) {
+                ramAddr = "R" + offset;
+            }else{
+                throw new RuntimeException("Offset " + offset + " is not valid for temp segment. Expecting (0-8)");
             }
         } else if (segment.equalsIgnoreCase(KEY_WORDS.STATIC.getKeyWord())) {
             int offset = Integer.parseInt(index);
             if (offset >= 0 && offset <= (RAM_ADDRESS.STATIC.getEnd() - RAM_ADDRESS.STATIC.getBegin())) {
                 ramAddr = "" + (RAM_ADDRESS.STATIC.getBegin() + offset);
+            }else{
+                throw new RuntimeException("Offset " + offset + " is not valid for static segment. Expecting (0-239)");
             }
         } else if (segment.equalsIgnoreCase(KEY_WORDS.THAT.getKeyWord())) {
             ramAddr = "THAT";
@@ -326,6 +348,8 @@ public class CodeWriter {
         //FRAME=LCL
         code += DEqReg("LCL");
         code += RegEqD(FRAME);
+        //RET=*(FRAME-5)
+        code += RegEqContentRegOpVal(RET, FRAME, "-", "5");
         //*ARG=pop()
         code += popToD();
         code += contentRegEqD("ARG");
@@ -341,8 +365,6 @@ public class CodeWriter {
         code += RegEqContentRegOpVal("ARG", FRAME, "-", "3");
         //LCL=*(FRAME-4)
         code += RegEqContentRegOpVal("LCL", FRAME, "-", "4");
-        //RET=*(FRAME-5)
-        code += RegEqContentRegOpVal(RET, FRAME, "-", "5");
         //goto RET
         code += gotoReg(RET);
         writeCode(code);
