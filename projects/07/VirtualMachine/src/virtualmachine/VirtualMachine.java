@@ -33,7 +33,7 @@ public class VirtualMachine {
         File[] listOfFiles = folder.listFiles();
 
         for (File inputFile : listOfFiles) {
-            if(!inputFile.getName().endsWith(".vm")){
+            if (!inputFile.getName().endsWith(".vm")) {
                 continue;
             }
             String currentFileName = inputFile.getName().substring(0, inputFile.getName().indexOf('.'));
@@ -46,15 +46,21 @@ public class VirtualMachine {
                     codeWriter.writeArithmatic(parser.arg1());
                 } else if (cmdType == COMMAND_TYPE.C_POP || cmdType == COMMAND_TYPE.C_PUSH) {
                     codeWriter.writePushPop(cmdType, parser.arg1(), parser.arg2());
-                }else if(cmdType == COMMAND_TYPE.C_LABEL){
+                } else if (cmdType == COMMAND_TYPE.C_LABEL) {
                     String labelName = String.format("%s.%s$%s", currentFileName, currentFunctionName, parser.arg1());
                     codeWriter.writeLabel(labelName);
-                }else if(cmdType == COMMAND_TYPE.C_GOTO){
+                } else if (cmdType == COMMAND_TYPE.C_GOTO) {
                     String labelName = String.format("%s.%s$%s", currentFileName, currentFunctionName, parser.arg1());
                     codeWriter.writeGoto(labelName);
-                }else if(cmdType == COMMAND_TYPE.C_IF){
+                } else if (cmdType == COMMAND_TYPE.C_IF) {
                     String labelName = String.format("%s.%s$%s", currentFileName, currentFunctionName, parser.arg1());
                     codeWriter.writeIf(labelName);
+                } else if (cmdType == COMMAND_TYPE.C_FUNCTION) {
+                    codeWriter.writeFunction(parser.arg1(), Integer.parseInt(parser.arg2()));
+                } else if (cmdType == COMMAND_TYPE.C_CALL) {
+                    codeWriter.writeCall(parser.arg1(), Integer.parseInt(parser.arg2()));
+                } else if (cmdType == COMMAND_TYPE.C_RETURN) {
+                    codeWriter.writeReturn();
                 }
             }
         }

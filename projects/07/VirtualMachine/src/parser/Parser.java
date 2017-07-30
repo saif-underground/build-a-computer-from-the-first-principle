@@ -77,8 +77,26 @@ public class Parser {
             if (matcher.find()) {
                 arg1 = matcher.group(2);
             }            
-        }
-
+        } else if(currentCmd.matches(cmdPatterns.functionDeclPatternStr.toString())){
+            currentCmdType = COMMAND_TYPE.C_FUNCTION;
+            Matcher matcher = cmdPatterns.getFunctionDeclPattern().matcher(currentCmd);
+            if (matcher.find()) {
+                arg1 = matcher.group(1);
+                arg2 = matcher.group(2);
+            }
+        } else if(currentCmd.matches(cmdPatterns.returnPattternStr.toString())){
+            currentCmdType = COMMAND_TYPE.C_RETURN;
+            arg1 = currentCmd;
+        } else if(currentCmd.matches(cmdPatterns.callPatternStr.toString())){
+            currentCmdType = COMMAND_TYPE.C_CALL;
+            Matcher matcher = cmdPatterns.getFunctionCallPattern().matcher(currentCmd);
+            if (matcher.find()) {
+                arg1 = matcher.group(1);
+                arg2 = matcher.group(2);
+            }
+        } 
+        
+        System.out.println("cmd type: "+ currentCmdType + " arg1: " + arg1 + " arg2: " + arg2 );
         if (currentCmdType == null) {
             throw new RuntimeException();
         }

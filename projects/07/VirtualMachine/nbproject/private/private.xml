@@ -3,12 +3,12 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Saif/Documents/GitHub/build-a-computer-from-the-first-principle/projects/07/VirtualMachine/src/virtualmachine/VirtualMachine.java</file>
-            <file>file:/C:/Users/Saif/Documents/GitHub/build-a-computer-from-the-first-principle/projects/07/VirtualMachine/SimpleAdd.vm</file>
-            <file>file:/C:/Users/Saif/Documents/GitHub/build-a-computer-from-the-first-principle/projects/07/VirtualMachine/src/enums/RAM_ADDRESS.java</file>
-            <file>file:/C:/Users/Saif/Documents/GitHub/build-a-computer-from-the-first-principle/projects/07/VirtualMachine/src/enums/KEY_WORDS.java</file>
-            <file>file:/C:/Users/Saif/Documents/GitHub/build-a-computer-from-the-first-principle/projects/07/VirtualMachine/src/parser/CodeWriter.java</file>
-            <file>file:/C:/Users/Saif/Documents/GitHub/build-a-computer-from-the-first-principle/projects/07/VirtualMachine/SimpleAdd.asm</file>
+            <file>file:/home/sid/Desktop/Bucket-List/1.build-a-computer/project/build-a-computer-from-the-first-principle/projects/07/VirtualMachine/src/virtualmachine/VirtualMachine.java</file>
+            <file>file:/home/sid/Desktop/Bucket-List/1.build-a-computer/project/build-a-computer-from-the-first-principle/projects/07/VirtualMachine/src/parser/Parser.java</file>
+            <file>file:/home/sid/Desktop/Bucket-List/1.build-a-computer/project/build-a-computer-from-the-first-principle/projects/07/VirtualMachine/prog/FibonacciSeries.tst</file>
+            <file>file:/home/sid/Desktop/Bucket-List/1.build-a-computer/project/build-a-computer-from-the-first-principle/projects/07/VirtualMachine/src/parser/CodeWriter.java</file>
+            <file>file:/home/sid/Desktop/Bucket-List/1.build-a-computer/project/build-a-computer-from-the-first-principle/projects/07/VirtualMachine/prog/FibonacciSeries.vm</file>
+            <file>file:/home/sid/Desktop/Bucket-List/1.build-a-computer/project/build-a-computer-from-the-first-principle/projects/07/VirtualMachine/prog/prog.asm</file>
         </group>
     </open-files>
 </project-private>

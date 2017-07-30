@@ -57,4 +57,12 @@ public class CommandPatterns {
     public Pattern getProgramFlowPattern(){
         return Pattern.compile(programFlowPatternStr);
     }
+    
+    public Pattern getFunctionDeclPattern(){
+        return Pattern.compile(functionDeclPatternStr);
+    }
+    
+    public Pattern getFunctionCallPattern(){
+        return Pattern.compile(callPatternStr);
+    }
 }
